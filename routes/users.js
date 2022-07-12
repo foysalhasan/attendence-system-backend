@@ -1,6 +1,8 @@
 const User = require('../models/User.Model')
 const router = require('express').Router()
+const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const auth = require('../middleware/auth')
 
 /**
  * ✅ REGISTER NEW USER
@@ -49,10 +51,16 @@ router.post('/login', async (req, res, next) => {
       return res.status(400).json({ message: 'Invalid Credential' })
     }
     delete user._doc.password
-    return res.status(200).json({ message: 'Login Successful', user })
+    const token = jwt.sign(user._doc, 'secret', { expiresIn: '24h' })
+    return res.status(200).json({ message: 'Login Successful', token })
   } catch (e) {
     next(e)
   }
+})
+
+router.get('/private', auth, async (req, res) => {
+  const { user } = req
+  res.status(200).json({ message: 'I am Private Route !', user })
 })
 
 module.exports = router
