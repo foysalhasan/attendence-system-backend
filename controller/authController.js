@@ -1,13 +1,9 @@
 const User = require('../models/User.Model')
-const router = require('express').Router()
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
-const auth = require('../middleware/auth')
+const jwt = require('jsonwebtoken')
 
-/**
- * ✅ REGISTER NEW USER
- */
-router.post('/register', async (req, res, next) => {
+// ✅ REGISTER NEW USER
+const registerController = async (req, res, next) => {
   const { name, email, password } = req.body
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Invalid Data' })
@@ -29,12 +25,10 @@ router.post('/register', async (req, res, next) => {
   } catch (e) {
     next(e)
   }
-})
+}
 
-/**
- * ✅ LOGIN USER
- */
-router.post('/login', async (req, res, next) => {
+// ✅ LOGIN A USER
+const loginController = async (req, res, next) => {
   const { email, password } = req.body
   if (!email || !password) {
     return res.status(400).json({ message: 'Invalid Data' })
@@ -56,11 +50,9 @@ router.post('/login', async (req, res, next) => {
   } catch (e) {
     next(e)
   }
-})
+}
 
-router.get('/private', auth, async (req, res) => {
-  const { user } = req
-  res.status(200).json({ message: 'I am Private Route !', user })
-})
-
-module.exports = router
+module.exports = {
+  registerController,
+  loginController,
+}

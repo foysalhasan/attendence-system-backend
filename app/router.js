@@ -1,6 +1,5 @@
 const router = require('express').Router()
-
-router.use('/auth/', require('../routes/users'))
+router.use(require('../routes'))
 
 router.get('/health', (_req, res) => {
   res.status(200).json({ message: 'Success !' })
